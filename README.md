@@ -6,6 +6,20 @@ After signing back in the UI showed the fallback screen until the app was killed
 relaunched. Re-publishing from the logout notification does not help either: the
 notification is posted **before** the store wipes session data.
 
+## How to run
+
+1. Open `Demo/Demo.xcodeproj` in Xcode 16 or newer (the local `LogoutWipe` package resolves automatically).
+2. Pick the `Demo` scheme and any iPhone simulator (iOS 17+).
+3. Press ⌘R. Use the **Naive / Fixed** switch at the top, then tap **Log in**, **Log out**, **Log in**:
+   - **Naive**: the card turns red ("Basic fallback") after the first logout and stays red after
+     logging back in. Only **Relaunch** (a simulated cold start) brings Advanced search back.
+   - **Fixed**: the card stays green through any number of logout/login cycles, while the
+     auth token is still wiped on every logout.
+4. Press ⌘U to run the package tests (`LogoutWipeTests`) from the same scheme.
+
+The library is plain Foundation, so `swift test` from the repo root also works on macOS
+(see [Run the tests](#run-the-tests)).
+
 ## The pieces
 
 - `KeyValueStore` with two scopes: `.session` (wiped by `logOut()`) and `.persisted`
