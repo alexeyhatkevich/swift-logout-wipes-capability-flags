@@ -15,6 +15,9 @@ notification is posted **before** the store wipes session data.
      logging back in. Only **Relaunch** (a simulated cold start) brings Advanced search back.
    - **Fixed**: the card stays green through any number of logout/login cycles, while the
      auth token is still wiped on every logout.
+   - **Scripted run**: launch arguments `-mode naive|fixed` and `-autorun 1` (Log in, Log out,
+     Log in), e.g. `xcrun simctl launch booted com.alexeyhatkevich.swift-logout-wipes-capability-flags.demo -mode fixed -autorun 1`.
+     In Xcode, add them under *Edit Scheme > Run > Arguments*.
 4. Press ⌘U to run the package tests (`LogoutWipeTests`) from the same scheme.
 
 The library is plain Foundation, so `swift test` from the repo root also works on macOS

@@ -38,7 +38,19 @@ final class DemoModel {
         let disk = Disk()
         self.disk = disk
         store = KeyValueStore(disk: disk)
-        relaunch()
+        // Launch argument for scripted runs: `-mode fixed` starts in the Fixed implementation.
+        // (With @Observable the assignment runs didSet, which already does the first cold start.)
+        if UserDefaults.standard.string(forKey: "mode")?.lowercased() == "fixed" { mode = .fixed }
+        if launches == 0 { relaunch() }
+    }
+
+    /// Launch argument `-autorun 1`: Log in, Log out, Log in (no relaunch).
+    func autorunIfRequested() async {
+        guard UserDefaults.standard.bool(forKey: "autorun") else { return }
+        for step in [logIn, logOut, logIn] {
+            try? await Task.sleep(for: .milliseconds(600))
+            step()
+        }
     }
 
     var screen: SearchScreen { SearchScreen.variant(in: store) }
@@ -127,6 +139,7 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Logout wipes flags")
+            .task { await model.autorunIfRequested() }
         }
     }
 }
